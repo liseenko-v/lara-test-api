@@ -19,7 +19,7 @@ class LogoutTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /*
+    
     public function testUserIsLoggedOutProperly()
     {
         $user = factory(User::class)->create(['email' => 'user@test.com']);
@@ -46,5 +46,5 @@ class LogoutTest extends TestCase
         $user->save();
 
         $this->json('get', '/api/articles', [], $headers)->assertStatus(401);
-    }*/
+    }
 }

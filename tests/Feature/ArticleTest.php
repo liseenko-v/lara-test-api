@@ -19,84 +19,84 @@ class ArticleTest extends TestCase
     {
         $this->assertTrue(true);
     }
-    /*
-        public function testsArticlesAreCreatedCorrectly()
-        {
-            $user = factory(User::class)->create();
-            $token = $user->generateToken();
-            $headers = ['Authorization' => "Bearer $token"];
-            $payload = [
+    
+    public function testsArticlesAreCreatedCorrectly()
+    {
+        $user = factory(User::class)->create();
+        $token = $user->generateToken();
+        $headers = ['Authorization' => "Bearer $token"];
+        $payload = [
                 'title' => 'Lorem',
                 'body' => 'Ipsum',
             ];
     
-            $this->json('POST', '/api/articles', $payload, $headers)
-                ->assertStatus(200)
+        $this->json('POST', '/api/articles', $payload, $headers)
+                ->assertStatus(201)
                 ->assertJson(['id' => 1, 'title' => 'Lorem', 'body' => 'Ipsum']);
-        }
+    }
     
-        public function testsArticlesAreUpdatedCorrectly()
-        {
-            $user = factory(User::class)->create();
-            $token = $user->generateToken();
-            $headers = ['Authorization' => "Bearer $token"];
-            $article = factory(Article::class)->create([
-                'title' => 'First Article',
-                'body' => 'First Body',
-            ]);
-    
-            $payload = [
+    public function testsArticlesAreUpdatedCorrectly()
+    {
+        $user = factory(User::class)->create();
+        $token = $user->generateToken();
+        $headers = ['Authorization' => "Bearer $token"];
+        $article = factory(Article::class)->create([
+            'title' => 'First Article',
+            'body' => 'First Body',
+        ]);
+
+        $payload = [
+            'title' => 'Lorem',
+            'body' => 'Ipsum',
+        ];
+
+        $response = $this->json('PUT', '/api/articles/' . $article->id, $payload, $headers)
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => 1,
                 'title' => 'Lorem',
-                'body' => 'Ipsum',
-            ];
-    
-            $response = $this->json('PUT', '/api/articles/' . $article->id, $payload, $headers)
-                ->assertStatus(200)
-                ->assertJson([
-                    'id' => 1,
-                    'title' => 'Lorem',
-                    'body' => 'Ipsum'
-                ]);
-        }
-    
-        public function testsArtilcesAreDeletedCorrectly()
-        {
-            $user = factory(User::class)->create();
-            $token = $user->generateToken();
-            $headers = ['Authorization' => "Bearer $token"];
-            $article = factory(Article::class)->create([
-                'title' => 'First Article',
-                'body' => 'First Body',
+                'body' => 'Ipsum'
             ]);
+    }
     
-            $this->json('DELETE', '/api/articles/' . $article->id, [], $headers)
-                ->assertStatus(204);
-        }
+    public function testsArtilcesAreDeletedCorrectly()
+    {
+        $user = factory(User::class)->create();
+        $token = $user->generateToken();
+        $headers = ['Authorization' => "Bearer $token"];
+        $article = factory(Article::class)->create([
+            'title' => 'First Article',
+            'body' => 'First Body',
+        ]);
+
+        $this->json('DELETE', '/api/articles/' . $article->id, [], $headers)
+            ->assertStatus(204);
+    }
     
-        public function testArticlesAreListedCorrectly()
-        {
-            factory(Article::class)->create([
-                'title' => 'First Article',
-                'body' => 'First Body'
+    public function testArticlesAreListedCorrectly()
+    {
+        factory(Article::class)->create([
+            'title' => 'First Article',
+            'body' => 'First Body'
+        ]);
+
+        factory(Article::class)->create([
+            'title' => 'Second Article',
+            'body' => 'Second Body'
+        ]);
+
+        $user = factory(User::class)->create();
+        $token = $user->generateToken();
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $response = $this->json('GET', '/api/articles', [], $headers)
+            ->assertStatus(200)
+            ->assertJson([
+                [ 'title' => 'First Article', 'body' => 'First Body' ],
+                [ 'title' => 'Second Article', 'body' => 'Second Body' ]
+            ])
+            ->assertJsonStructure([
+                '*' => ['id', 'body', 'title', 'created_at', 'updated_at'],
             ]);
-    
-            factory(Article::class)->create([
-                'title' => 'Second Article',
-                'body' => 'Second Body'
-            ]);
-    
-            $user = factory(User::class)->create();
-            $token = $user->generateToken();
-            $headers = ['Authorization' => "Bearer $token"];
-    
-            $response = $this->json('GET', '/api/articles', [], $headers)
-                ->assertStatus(200)
-                ->assertJson([
-                    [ 'title' => 'First Article', 'body' => 'First Body' ],
-                    [ 'title' => 'Second Article', 'body' => 'Second Body' ]
-                ])
-                ->assertJsonStructure([
-                    '*' => ['id', 'body', 'title', 'created_at', 'updated_at'],
-                ]);
-        }*/
+    }
 }
