@@ -112,4 +112,33 @@ class ArticleTest extends TestCase
         $headers = ['Authorization' => "Bearer $token"];
         $response = $this->json('get', 'api/articles', [], $headers)->assertStatus(200);
     }
+
+    public function testArticlesAddGetUpdateDelete()
+    {
+        factory(User::class)->create(['email'=>'test@test.ru']);
+        $payload = ['email' => 'test@test.ru', 'password' => 'secret'];
+        $response = $this->json('post', 'api/login', $payload);
+        
+        $response->assertStatus(200);
+
+        $token = $response->original['data']['api_token'];
+        $headers = ['Authorization' => "Bearer $token"];
+        $this->json('get', 'api/articles', [], $headers)->assertStatus(200);
+
+        $payload = ['title' => 'First Article', 'body' => 'First test'];
+        $this->json('post', 'api/articles', $payload, $headers)->assertStatus(201);
+
+        $this->json('get', 'api/articles/1', [], $headers)->assertStatus(200);
+       
+        $payload_update = ['title' => 'First change'];
+        $this->json('put', 'api/articles/1', $payload_update, $headers)->assertStatus(200);
+
+        $this->json('get', 'api/articles/1', [], $headers)->assertStatus(200)->assertJson(['title' => 'First change', 'body' => 'First test']);
+
+        $this->json('delete', 'api/articles/1', [], $headers)->assertStatus(204);
+
+        $this->json('get', 'api/articles/1', [], $headers)->assertStatus(404);
+
+        $this->json('post', 'api/logout')->assertStatus(200);
+    }
 }
