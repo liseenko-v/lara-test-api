@@ -103,7 +103,6 @@ class ArticleTest extends TestCase
     public function testArticlesCanShowUnauthorizedUser()
     {
         $response = $this->json('get', 'api/articles')->assertStatus(401);
-   
     }
 
     public function testArticlesCanShowAuthorizedUser()
@@ -112,6 +111,5 @@ class ArticleTest extends TestCase
         $token = $user->generateToken();
         $headers = ['Authorization' => "Bearer $token"];
         $response = $this->json('get', 'api/articles', [], $headers)->assertStatus(200);
-
     }
 }
