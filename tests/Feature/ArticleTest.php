@@ -99,4 +99,19 @@ class ArticleTest extends TestCase
                 '*' => ['id', 'body', 'title', 'created_at', 'updated_at'],
             ]);
     }
+
+    public function testArticlesCanShowUnauthorizedUser()
+    {
+        $response = $this->json('get', 'api/articles')->assertStatus(401);
+   
+    }
+
+    public function testArticlesCanShowAuthorizedUser()
+    {
+        $user = factory(User::class)->create();
+        $token = $user->generateToken();
+        $headers = ['Authorization' => "Bearer $token"];
+        $response = $this->json('get', 'api/articles', [], $headers)->assertStatus(200);
+
+    }
 }
